@@ -1,0 +1,17 @@
+<div class="content" role="main">
+
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 myColor border-bottom shadow-sm fixed-top">
+  <h5 class="my-0 mr-md-auto font-weight-normal">Maria Diagram</h5>
+  <nav class="my-2 my-md-0 mr-md-3">
+    <a *ngIf="this.authService.isLoggedIn" class="p-2">Seu sucesso não é por acaso.</a>
+    <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-light" routerLinkActive="active" routerLink="/login">
+      Login
+    </a>
+  </nav>
+  <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-light" routerLinkActive="active"
+    routerLinkActive="active" routerLink="/register">Register</a>
+  <button (click)="logout()" *ngIf="this.authService.isLoggedIn" type="button" class="btn btn-outline-warning">Sair</button>
+
+</div>
+
+<router-outlet></router-outlet>
