@@ -223,7 +223,7 @@ export class DiagramComponent implements OnInit {
       if (myObject.hasOwnProperty('optionsUpdateBar')) {
         let orgItems = myObject['optionsUpdateBar'].onChanged.listeners[0].control.documentDataSource.nodeDataSource;
         let orgLinks = myObject['optionsUpdateBar'].onChanged.listeners[0].control.documentDataSource.edgeDataSource;
-        console.log('Diagrama Ok 👍🏽');
+        console.log('Diagrama 👍🏽');
         this.diagServ.saveDG(this.id, orgItems, orgLinks)
         .subscribe(res => {
           console.log('MongoDB', res);
