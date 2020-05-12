@@ -1,5 +1,7 @@
+import { ViewChild, AfterViewInit, ElementRef, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { DiagramService } from './shared/api/diagram.service';
 import { AuthService } from './shared/auth/auth.service';
-import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +10,18 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  title = 'maria-graph';
+  message: string;
 
   constructor(
-    public authService: AuthService
+    private diagServ: DiagramService,
+    public authService: AuthService,
   ){    
+    this.diagServ.diagramSource.subscribe(message => {
+      message = message;
+    })
   }
 
   logout() {
-    this.authService.doLogout()
+    this.authService.doLogout();
   }
 }

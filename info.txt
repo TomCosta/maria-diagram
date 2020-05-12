@@ -3,10 +3,13 @@ https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#install-mongod
 
 // Inicializar MongoDB, to run MongoDB (mongod process) as a service.
 mongod
-// ou
-brew services start mongodb-community
 
 // Parar MongoDB
+Ctrl + C
+
+
+// Mac OSX
+brew services start mongodb-community
 brew services stop mongodb-community
 
 // Verificar se está rodando, To verify that MongoDB is running, search for mongod in your running processes.

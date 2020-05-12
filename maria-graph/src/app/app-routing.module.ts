@@ -8,7 +8,7 @@ import { NgModule } from '@angular/core';
 import { DxButtonModule } from 'devextreme-angular';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'app-diagram', component: DiagramComponent, canActivate: [AuthGuard] },

@@ -3,11 +3,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 const userSchema = require('../models/User');
+const diagramSchema = require('../models/Diagram');
 const authorize = require('../middlewares/auth');
 const { check, validationResult } = require('express-validator');
 
-
-// Sign-up
+// Registo
 router.post('/register-user',
     [
         check('name')
@@ -24,7 +24,6 @@ router.post('/register-user',
             .isLength({ min: 5, max: 8 })
     ],
     (req, res, next) => {
-        console.log('req.body ', req.body);
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
@@ -51,7 +50,7 @@ router.post('/register-user',
         }
     });
 
-// Sign-in
+// Login
 router.post('/signin', (req, res, next) => {
     let getUser;
     userSchema.findOne({
@@ -114,12 +113,12 @@ router.route('/user-profile/:id').get((req, res, next) => {
 
 // Update User
 router.route('/update-user/:id').put((req, res, next) => {
-    userSchema.findByIdAndUpdate(req.params.id, {
+    userSchema.updateOne(req.params.id, {
         $set: req.body
     }, (error, data) => {
         if (error) {
-            return next(error);
             console.log(error)
+            return next(error);
         } else {
             res.json(data)
             console.log('User successfully updated!')
@@ -129,11 +128,77 @@ router.route('/update-user/:id').put((req, res, next) => {
 
 // Delete User
 router.route('/delete-user/:id').delete((req, res, next) => {
-    userSchema.findByIdAndRemove(req.params.id, (error, data) => {
+    userSchema.deleteOne(req.params.id, (error, data) => {
+        if (error) {            
+            return next(error);
+        } else {
+            res.status(200).json({
+                msg: data
+            })
+        }
+    })
+})
+
+// Get Diagram
+router.route('/diagram').get(authorize, (req, res, next) => {
+    diagramSchema.find({}, (error, diagrams) => {
+        if (error) {
+            console.log('Oh error ', next(error));
+            return next(error)
+        } else {
+            res.status(200).json({
+                data: diagrams
+            })
+        }
+    })
+})
+
+// Save Diagram
+router.post('/diagram', async (req, res) => {
+    console.log('Api salvar: ', req.body);
+    const { id, orgItem, orgLink } = req.body;
+    const diagram = new diagramSchema({
+        orgItem: orgItem,
+        orgLink: orgLink
+    });
+    try {
+        if (req.body.id) {
+            await diagramSchema.updateOne({'_id' : id},
+                {$set: {orgItem: orgItem, orgLink: orgLink}},
+                (error, data) => {
+                if (error) {
+                    console.log('updateOne Error: ', error);
+                    return next(error);
+                } else {
+                    res.json(data)
+                    console.log('Diagrama successfully updated!')
+                }
+            })
+        } else {
+            diagram.save().then((response) => {
+                res.status(201).json({
+                    message: 'Diagrama criado com sucesso!',
+                    result: response
+                });
+            }).catch(error => {
+                res.status(500).json({
+                    error: error
+                });
+            });
+        }
+    } catch (error) {
+        console.log('Api catch (error): ', error);
+    }
+})
+
+// Delete Diagram
+router.route('/delete/:id').delete((req, res, next) => {
+    diagramSchema.deleteOne(req.params.id, { document: true }, (error, data) => {
         if (error) {
             return next(error);
         } else {
             res.status(200).json({
+                message: 'Diagrama deletado com sucesso!',
                 msg: data
             })
         }

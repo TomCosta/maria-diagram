@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, timeout } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../user/user';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +37,7 @@ export class AuthService {
         localStorage.setItem('access_token', res.token);        
         this.getUserProfile(res.msg['_id']).subscribe((res) => {
           this.currentUser = res;
-          this.router.navigate(['app-diagram/']);
+          this.router.navigate(['/app-diagram']);
           // this.router.navigate(['user-profile/' + res.msg['_id']]);
         })
       })
@@ -54,15 +54,16 @@ export class AuthService {
 
   doLogout() {
     let removeToken = localStorage.removeItem('access_token');
-    if (removeToken == null) {
-      this.router.navigate(['login']);
+    if (removeToken == null || removeToken == undefined) {
+      this.router.navigate(['/login']);
     }
   }
 
   // User profile
   getUserProfile(id): Observable<any> {
     let api = `${this.endpoint}/user-profile/${id}`;
-    return this.http.get(api, { headers: this.headers }).pipe(
+    return this.http.get(api, { headers: this.headers })
+    .pipe(
       map((res: Response) => {
         return res || {}
       }),

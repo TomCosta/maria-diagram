@@ -12,6 +12,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DiagramComponent } from './diagram/diagram.component';
 import { DxDiagramModule } from 'devextreme-angular';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { SaveButtonComponent } from './save.button';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
     LoginComponent,
     RegisterComponent,
     UserProfileComponent,
+    SaveButtonComponent,
     DiagramComponent
   ],
   imports: [
