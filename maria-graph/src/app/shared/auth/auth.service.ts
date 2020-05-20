@@ -35,7 +35,7 @@ export class AuthService {
     return this.http.post<any>(`${this.endpoint}/signin`, user)
       .subscribe((res: any) => {
         localStorage.setItem('access_token', res.token);        
-        this.getUserProfile(res.msg['_id']).subscribe((res) => {
+        this.getUserProfile(res['data']['_id']).subscribe((res) => {
           this.currentUser = res;
           this.router.navigate(['/app-diagram']);
           // this.router.navigate(['user-profile/' + res.msg['_id']]);
