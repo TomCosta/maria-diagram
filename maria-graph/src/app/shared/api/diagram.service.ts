@@ -47,10 +47,8 @@ export class DiagramService {
         )
     }
 
-    deleteDG(orgItems: Array<OrgItem>, orgLinks: Array<OrgLink>): Observable<any> {
-        let id = {'orgItems':orgItems['_id'], 'orgLinks':orgLinks['_id'] }
-        let api = `${this.endpoint}/delete/${id}`;
-        return this.http.post(api, JSON.stringify(id), {headers:this.headers})
+    deleteDG(id): Observable<any> {
+        return this.http.delete(`${this.endpoint}/delete/${id}`, {headers:this.headers})
         .pipe(
             catchError(this.handleError)
         )

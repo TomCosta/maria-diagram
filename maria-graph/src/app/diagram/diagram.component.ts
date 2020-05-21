@@ -4,6 +4,7 @@ import { OrgItem, OrgLink } from '../shared/models/diagram';
 import { ViewChild, enableProdMode } from '@angular/core';
 import ArrayStore from 'devextreme/data/array_store';
 import { Component, OnInit } from '@angular/core';
+import { AlertService } from '../_alert';
 
 if(!/localhost/.test(document.location.host)) {
   enableProdMode();
@@ -20,6 +21,11 @@ export class DiagramComponent implements OnInit {
   @ViewChild(DxDiagramComponent, { static: false }) diagram: DxDiagramComponent;
   
   id;
+
+  options = {
+    autoClose: true,
+    keepAfterRouteChange: false
+  };
 
   orgItems: OrgItem[] = [{
         'ID': '106',
@@ -163,9 +169,10 @@ export class DiagramComponent implements OnInit {
 
   orgItemsDataSource: ArrayStore;
   orgLinksDataSource: ArrayStore;
-  
+
   constructor(
-    private diagServ: DiagramService
+    private diagServ: DiagramService,
+    protected alertService: AlertService
   ){
   }
 
@@ -176,7 +183,8 @@ export class DiagramComponent implements OnInit {
     // Subscreve-se no serviço botão para Salvar
     this.diagServ.diagramSource.subscribe(message => {
       if(message==='salvar'){
-        this.saveDiagram();        
+        this.saveDiagram();
+        // this.deleteDiagram('5ec5fca68f67c61cb8a4c0a3');
       }
     });
   }
@@ -186,7 +194,8 @@ export class DiagramComponent implements OnInit {
     try {
       this.diagServ.loadDG()
       .subscribe(res => {
-        if(res['data'].length>0){
+        console.log('GET: ', res);
+        if(res['data'].length>0 && res['data'][0]['orgItem'].length>0){
           this.id = res['data'][0]['_id'];
           let orgItems = res['data'][0]['orgItem'];
           let orgLinks = res['data'][0]['orgLink'];
@@ -227,25 +236,38 @@ export class DiagramComponent implements OnInit {
         this.diagServ.saveDG(this.id, orgItems, orgLinks)
         .subscribe(res => {
           console.log('MongoDB', res);
+          this.showAlert('success', res.message);
         });
       }else{
         console.log('Ops Not found');
+        this.showAlert('error', 'Erro ao salvar');
       }    
     } catch (error) {
       console.log('Error ', error);
+      this.showAlert('error', error.message);
     }
   }
 
   // Deleta um Diagrama
-  deleteDiagram() {
-    this.diagServ.deleteDG(this.orgItems, this.orgLinks)
+  deleteDiagram(id) {
+    this.diagServ.deleteDG(id)
       .subscribe(res => {
         console.log('Delete ', res);
+        this.showAlert('success', res.message);
       });
   } catch(error) {
     console.log('Error ', error);
+    this.showAlert('error', error.message);
   }
 
+  showAlert(status, msg){
+    if(status == 'success'){
+      this.alertService.success(msg, this.options)    
+    }else{
+      this.alertService.error(msg, this.options)
+    }
+  }
+  
   // Função acionada ao sair desta página
   ngOnDestroy(): void {    
   }

@@ -395,8 +395,10 @@ router.post('/diagram', async (req, res) => {
  *    default:
  *      description: Unexpected error
  */
-router.route('/delete/:id').delete((req, res, next) => {
-    diagramSchema.deleteOne(req.params.id, { document: true }, (error, data) => {
+router.route('/delete/:id').delete(authorize, async (req, res, next) => {
+    console.log('delete: ', req.params.id);
+	let id = req.params.id;
+    await diagramSchema.findOneAndDelete(req.params.id, { document: true }, (error, data) => {
         if (error) {
             return next(error);
         } else {

@@ -7,6 +7,11 @@
       Login
     </a>
   </nav>
+  <!-- Inicio Alerts -->
+  <div class="alertMxWidth text-center flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 fixed-top">
+    <alert></alert>
+  </div>
+  <!-- Fim Alerts-->
   <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-light" routerLinkActive="active"
     routerLinkActive="active" routerLink="/register">Register</a>
   <save-button *ngIf="this.authService.isLoggedIn"></save-button>
@@ -14,4 +19,5 @@
   <button (click)="logout()" *ngIf="this.authService.isLoggedIn" type="button" class="btn btn-outline-warning">Sair</button>
 </div>
 
+<!-- main app container -->
 <router-outlet></router-outlet>

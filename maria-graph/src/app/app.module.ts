@@ -13,6 +13,7 @@ import { DiagramComponent } from './diagram/diagram.component';
 import { DxDiagramModule } from 'devextreme-angular';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { SaveButtonComponent } from './save.button';
+import { AlertModule } from './_alert';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { SaveButtonComponent } from './save.button';
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    DxDiagramModule
+    DxDiagramModule,
+    AlertModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
